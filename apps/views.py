@@ -81,6 +81,7 @@ class ProductDetailView(DetailView):
         return qs
 
 
+
 class ContactView(LoginRequiredMixin, TemplateView):
     template_name = 'apps/profile/contacts.html'
 
