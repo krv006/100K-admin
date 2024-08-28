@@ -14,6 +14,7 @@ from apps.models import User
 
 from django.urls import reverse_lazy
 
+
 # Create your views here.
 
 def search_products(request):
@@ -79,7 +80,6 @@ class ProductDetailView(DetailView):
         qs = super().get_context_data(**kwargs)
         qs["regions"] = Region.objects.all()
         return qs
-
 
 
 class ContactView(LoginRequiredMixin, TemplateView):
