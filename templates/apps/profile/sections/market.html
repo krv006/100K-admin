@@ -203,7 +203,7 @@
                         {% for product in products %}
                             <div class="card">
                                 <div class="card__img">
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
                                 </div>
                                 <div class="card__details">
                                     <h2 class="c-red">{{ product.name }}</h2>
