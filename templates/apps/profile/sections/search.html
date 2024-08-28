@@ -1,0 +1,54 @@
+{% extends 'apps/include_base/base.html' %}
+{% load humanize %}
+{% block body %}
+    <section class="main py-4">
+        <!-- Header with Categories and Filters -->
+        <div class="container border-bottom mb-4">
+            <div class="header_tab_menu">
+                <div class="header_menu d-flex flex-wrap justify-content-start align-items-center">
+                    <a href="{% url 'product-list-page' %}" class="btn btn-primary me-2 mb-2 mb-md-0">Barchasi</a>
+                    {% for category in categories %}
+                        <a href="{% url 'product-list-page' %}?category={{ category.pk }}" class="btn btn-outline-primary me-2 mb-2 mb-md-0">
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+        <div class="container" id="productsList" style="height: 1000px">
+            <h2 class="my-4 text-center">Search Results for "{{ query }}"</h2>
+            <div class="content_grid">
+                <div class="row g-4">
+                    {% for product in products %}
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="content_grid_card h-100 border rounded shadow-sm overflow-hidden">
+                                <a href="{% url 'product-detail-page' product.pk %}" class="d-block">
+                                    {% if product.images.exists %}
+                                        <img loading="lazy" class="lazyload img-fluid"
+                                             src="https://100k.uz/themes/stock/assets/img/loading.gif"
+                                             data-src="{{ product.images.first.image.url }}"
+                                             alt="{{ product.name }}"
+                                             style="object-fit: cover; height: 200px;">
+                                    {% else %}
+                                        <img loading="lazy" class="lazyload img-fluid"
+                                             src="/path/to/default/image.jpg"
+                                             alt="{{ product.name }}"
+                                             style="object-fit: cover; height: 200px;">
+                                    {% endif %}
+                                </a>
+                                <div class="content_grid_card_price text-center p-3 bg-light">
+                                    <p class="mb-0 font-weight-bold text-primary">{{ product.price|intcomma }} so'm</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12 text-center">
+                            <p class="text-muted">No products found matching "{{ query }}".</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

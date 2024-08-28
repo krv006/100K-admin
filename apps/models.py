@@ -60,12 +60,6 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    # username = models.CharField(
-    #     max_length=150,
-    #     unique=True,
-    #     null=True
-    # )
-
     class Role(TextChoices):
         ADMIN = "admin", 'Admin'
         OPERATOR = "operator", 'Operator'

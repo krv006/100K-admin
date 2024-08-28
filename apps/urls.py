@@ -3,7 +3,7 @@ from django.urls import path
 
 from apps.views import HomeListView, ProductListView, ProductDetailView, AdminDashboardView, CustomLoginView, \
     ProfileView, AdminMarketView, AdminStatisticsView, StreamListView, AdminPaymentView, OrderCreateView, \
-    StreamFormView, OrderListView, OrderedListView, StreamOrderView
+    StreamFormView, OrderListView, OrderedListView, StreamOrderView, search_products
 
 urlpatterns = [
     path('', HomeListView.as_view(), name='home'),
@@ -30,4 +30,6 @@ urlpatterns = [
     path('order/success/<int:order_id>/', OrderListView.as_view(), name='order_success'),
     path('orders/', OrderListView.as_view(), name='order_list'),
     path('product/archived', OrderedListView.as_view(), name='product-archived'),
+    path('search/', search_products, name='search_products'),
+
 ]

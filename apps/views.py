@@ -5,20 +5,28 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.db.models import Max, F
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 from django.views.generic import TemplateView
 
 from apps.form import OrderForm, StreamForm
 from apps.models import Category, Product, Stream, SiteSettings, Order, Region
 from apps.models import User
 
+from django.urls import reverse_lazy
 
 # Create your views here.
 
+def search_products(request):
+    query = request.GET.get('q', '')
+    products = Product.objects.filter(name__icontains=query) if query else Product.objects.all()
+    return render(request, 'apps/profile/sections/search.html', {'products': products, 'query': query})
+
+
 class HomeListView(ListView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.order_by('-created_at')
     template_name = 'apps/product/home.html'
-    context_object_name = 'categories'
+    context_object_name = 'products'
+    paginate_by = 8
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -34,7 +42,6 @@ class HomeListView(ListView):
             context['categories'] = Category.objects.filter(parent_id=category_id)
         else:
             context['categories'] = Category.objects.all()
-
         return context
 
 
@@ -156,7 +163,6 @@ class StreamFormView(FormView):
         return redirect('stream')
 
     def form_invalid(self, form):
-        # If the form is invalid, re-render the form with validation errors
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -192,7 +198,7 @@ class StreamOrderView(DetailView, FormView):
         product = self.object.product
         product.price -= self.object.discount
         context['product'] = product
-        # context['deliver_price'] = SiteSettings.objects.first().deliver_price
+        context["regions"] = Region.objects.all()
         stream_id = self.kwargs.get('pk')
         Stream.objects.filter(pk=stream_id).update(count=F('count') + 1)
         return context
@@ -235,7 +241,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         order = Order(
             name=request.POST.get('name'),
             phone_number=re.sub(r'\D', '', request.POST.get('phone_number')),
-            region=region,  # Region obyektini uzatish
+            region=region,
             product=product
         )
         try:
@@ -274,3 +280,13 @@ class OrderedListView(ListView):
         context = super().get_context_data(**kwargs)
         context['orders'] = self.get_queryset()  # or self.queryset
         return context
+
+
+class SettingsUpdateView(LoginRequiredMixin, UpdateView):
+    queryset = User.objects.all()
+    fields = 'first_name', 'last_name'
+    template_name = 'apps/profile/profile.html'
+    success_url = reverse_lazy('settings_page')
+
+    def get_object(self, queryset=None):
+        return self.request.user

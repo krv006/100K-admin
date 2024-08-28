@@ -10,9 +10,9 @@
                 <div class="section-divider" style="height: 2px; background-color: #eee; margin: 20px 0;"></div>
                 <h1 class="page-title" style="text-align: center; margin: 20px 0;">Mening havolalarim</h1>
                 <div class="section-divider" style="height: 2px; background-color: #eee; margin: 20px 0;"></div>
-                <div class="stream__cards" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div class="stream__cards">
                     {% for stream in streams %}
-                        <div class="col-sm-4" style="width: calc(100% / 3 - 20px);">
+                        <div class="col-sm-4">
                             <div class="card-header">
                                 <h5>{{ stream.name }}</h5>
                                 <h5>-{{ stream.discount }}</h5>
