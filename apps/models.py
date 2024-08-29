@@ -7,6 +7,8 @@ from django.db.models import Model, DateTimeField, UUIDField, CharField, SlugFie
     ForeignKey, CASCADE, TextChoices, EmailField, TextField, BooleanField, IntegerField, SET_NULL, FloatField
 
 from django.utils.text import slugify
+from django_ckeditor_5.fields import CKEditor5Field
+
 
 
 class CreatedAtBase(Model):
@@ -84,8 +86,8 @@ class Category(BaseSlugModel):
 class Product(BaseSlugModel):
     name = CharField(max_length=255)
     price = models.FloatField()
-    short_description = TextField()
-    long_description = TextField()
+    short_description = CKEditor5Field()
+    long_description = CKEditor5Field()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
 
 
